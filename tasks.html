@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('HD-wallpaper-beautiful-landscape-digital-art.jpg');
+            margin: 0;
+            padding: 0;
+            background-size: cover; /* This will make the background cover the entire screen */
+            background-position: center; /* Center the background image */
+            background-repeat: no-repeat; /* Prevent the background image from repeating */
+            min-height: 100vh; /* Ensure the body fills at least the entire viewport height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        #content {
+            width: 80%; /* Adjusted width */
+            min-height: 30vh; /* Adjusted minimum height */
+            padding: 30px;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.4); /* Semi-transparent white background */
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Soft shadow effect */
+            z-index: 0; /* Ensure content is below sidebar */
+            margin-top: 70px;
+            position: relative; /* Position relative for absolute positioning */
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%; /* Adjusted width */
+            margin: 20px auto; /* Center the table */
+            background-color: #fff; /* White background */
+            border-radius: 10px; /* Rounded corners */
+        }
+        table, th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button {
+            padding: 10px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: -5px;
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+        button:hover {
+            background-color: #005f78;
+        }
+        #timerContainer {
+            position: fixed;
+            top: 20px;
+            right: 440px;
+            background-color: #0000FB20;
+            color: blackS;
+            padding: 30px 150px;
+            border-radius: 5px;
+            display: none;
+            width: 160px;
+        }
+        #timerDisplay {
+            font-size: 50px; /* Adjust the font size as needed */
+        }
+        .running-text {
+            color: green;
+            font-weight: bold;
+            display: none;
+            margin-left: 10px; /* Added margin */
+        }
+        .notification {
+            background-color: #ffcccb;
+            color: #ff0000;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: none;
+        }
+        #title-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            z-index: 1; /* Ensure title is above other content */
+        }
+        #title-container img {
+            width: 160px; /* Adjust logo size */
+            height: 100px;
+            margin-right: 10px; /* Add margin between logo and title */
+        }
+        #title-container h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #333; /* Adjust title color */
+        }
+
+        /* Sidebar Styles */
+        #sidebar {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #333;
+    padding-top: 20px;
+    transition: all 0.3s ease;
+    overflow-x: hidden;
+    z-index: 2;
+  }
+  #sidebar a {
+    padding: 10px 15px;
+    text-decoration: none;
+    font-size: 23px;
+    text-align: center;
+    color: #fff;
+    display: block;
+    margin-bottom: 5px;
+    margin-top: 10px; /* Added margin-top */
+  } 
+
+        .content-shift {
+            margin-left: 0px; /* Adjusted for open sidebar */
+            transition: 0.5s;
+        }
+
+        #sidebarToggleBtn {
+    position: absolute;
+    top: 5px;
+    right: 1240px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 30%;
+    padding: 5px; /* Adjusted padding */
+    cursor: pointer;
+    z-index: 3;
+    font-size: 16px; /* Adjusted font size */
+  }
+  #sidebarToggleBtn:hover {
+    background-color: #000;
+  }
+
+        /* Sidebar Toggle Button */
+        
+    </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <a href="index.html">Home</a>
+    <a href="#">Tasks</a>
+    <a href="ttgen.html">Timetable Gen</a>
+    <a href="source.html">Sources</a>
+    <a href="aiquest.html">AI Quest</a>
+    <a href="ocr.html">Img-Text</a>
+    <a href="notes.html">Notes</a>
+    <a href="summarizer.html">summarizer</a>
+</div>
+
+<div id="content" class="content-shift">
+    <h1></h1>
+    <div id="notification" class="notification">Another task is already running. Stop the current task before starting a new one.</div>
+    <table id="myTable">
+        <thead>
+            <tr>
+                <th>TASKS</th>
+                <th>TIME REQUIRED [in mins]</th>
+                <th>ACTIONS</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Initial rows -->
+            <tr>
+                <td contenteditable="true"></td>
+                <td><input type="number" min="1" step="1"></td>
+                <td>
+                    <button onclick="startTimer(this)">Start</button>
+                    <button onclick="stopTimer(this)" style="display:none">Stop</button>
+                    <button onclick="deleteRow(this)">Delete</button>
+                    <span class="running-text">Running</span>
+                </td>
+            </tr>
+            <!-- Additional rows will be dynamically added here -->
+        </tbody>
+    </table>
+    <button onclick="addRow()">Add Row</button>
+
+    <!-- Timer container -->
+    <div id="timerContainer">
+        <div id="timerDisplay">00:00:00</div>
+    </div>
+
+    <!-- StudyQuest Title and Logo -->
+    <div id="title-container">
+        <img src="studyquest-high-resolution-logo-black-transparent.png" alt="StudyQuest Logo">
+        <h1>STUDYQUEST</h1>
+    </div>
+
+    <!-- Sidebar Toggle Button -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+    <script>
+        var timerInterval; // Variable to hold the timer interval
+        var isTaskRunning = false; // Variable to track if a task is running
+
+        function addRow() {
+            var table = document.getElementById("myTable").getElementsByTagName('tbody')[0];
+            var newRow = table.insertRow(table.rows.length);
+
+            // Column 1 (editable)
+            var cell1 = newRow.insertCell(0);
+            var cellInput1 = document.createElement("td");
+            cellInput1.contentEditable = true;
+            cell1.appendChild(cellInput1);
+
+            // Column 2 (TIME REQUIRED [in mins])
+            var cell2 = newRow.insertCell(1);
+            var timeInput = document.createElement("input");
+            timeInput.type = "number";
+            timeInput.min = "1";
+            timeInput.step = "1";
+            cell2.appendChild(timeInput);
+
+            // Column 3 (Actions)
+            var cell3 = newRow.insertCell(2);
+            var startButton = document.createElement("button");
+            startButton.textContent = "Start";
+            startButton.onclick = function() {
+                startTimer(this);
+            };
+            var stopButton = document.createElement("button");
+            stopButton.textContent = "Stop";
+            stopButton.onclick = function() {
+                stopTimer(this);
+            };
+            stopButton.style.display = "none";
+            var deleteButton = document.createElement("button");
+            deleteButton.textContent = "Delete";
+            deleteButton.onclick = function() {
+                deleteRow(this);
+            };
+            var runningText = document.createElement("span");
+            runningText.textContent = "Running";
+            runningText.className = "running-text";
+            cell3.appendChild(startButton);
+            cell3.appendChild(stopButton);
+            cell3.appendChild(deleteButton);
+            cell3.appendChild(runningText);
+        }
+
+        function startTimer(button) {
+            if (isTaskRunning) {
+                document.getElementById("notification").style.display = "block";
+                return; // Prevent starting another task if one is already running
+            }
+
+            var row = button.parentNode.parentNode;
+            var timeInput = row.cells[1].querySelector("input[type='number']");
+            var timeInMinutes = parseInt(timeInput.value, 10);
+
+            if (!isNaN(timeInMinutes) && timeInMinutes > 0) {
+                var timerDisplay = document.getElementById("timerDisplay");
+                timerDisplay.textContent = formatTime(timeInMinutes * 60);
+
+                // Display the timer container
+                document.getElementById("timerContainer").style.display = "block";
+
+                // Show the stop button and hide the start button
+                button.style.display = "none";
+                row.cells[2].querySelector("button:nth-child(2)").style.display = "inline-block";
+                row.cells[2].querySelector(".running-text").style.display = "inline-block";
+                isTaskRunning = true; // Set task running to true
+
+                // Clear any existing interval
+                clearInterval(timerInterval);
+
+                // Start the countdown timer
+                var startTime = Date.now();
+                timerInterval = setInterval(function() {
+                    var elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+                    var remainingSeconds = timeInMinutes * 60 - elapsedSeconds;
+
+                    if (remainingSeconds >= 0) {
+                        timerDisplay.textContent = formatTime(remainingSeconds);
+                    } else {
+                        clearInterval(timerInterval);
+                        timerDisplay.textContent = "00:00:00";
+                        isTaskRunning = false; // Reset task running to false when timer completes
+                    }
+                }, 1000);
+            }
+        }
+
+        function stopTimer(button) {
+            clearInterval(timerInterval);
+            var row = button.parentNode.parentNode;
+            row.cells[2].querySelector("button:first-child").style.display = "inline-block";
+            row.cells[2].querySelector(".running-text").style.display = "none";
+            button.style.display = "none";
+            isTaskRunning = false; // Reset task running to false when stopped
+        }
+
+        function deleteRow(button) {
+            var row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        }
+
+        function formatTime(totalSeconds) {
+            var minutes = Math.floor(totalSeconds / 60);
+            var seconds = totalSeconds % 60;
+            return pad(minutes) + ":" + pad(seconds);
+        }
+
+        function pad(value) {
+            return value < 10 ? "0" + value : value;
+        }
+
+        function toggleSidebar() {
+  var sidebar = document.getElementById("sidebar");
+  var content = document.getElementById("content");
+  var sidebarToggleBtn = document.getElementById("sidebarToggleBtn");
+
+  if (sidebar.style.width === "0px" || sidebar.style.width === "") {
+    sidebar.style.width = "200px";
+    content.style.marginLeft = "200px";
+  } else {
+    sidebar.style.width = "0";
+    content.style.marginLeft = "0";
+  }
+}
+    </script>
+</div>
+
+</body>
+</html>

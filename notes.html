@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Notes</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0;
+		}
+		.container {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			margin-top: 20px;
+			margin-left: 0px; /* Increase margin-left to make space for the sidebar */
+                        background-image: url('desktop-wallpaper-peaceful-nature.png');
+			background-size: cover;
+			background-position: center;
+		}
+		.subject-box {
+			width: 300px;
+			height: 200px;
+			background-color: #f0f0f0;
+			border: 1px solid #ccc;
+			margin: 20px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			font-size: 36px;
+			font-weight: bold;
+			cursor: pointer;
+		}
+		.add-box {
+			width: 300px;
+			height: 200px;
+			background-color: #e0e0e0;
+			border: 1px solid #ccc;
+			margin: 20px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			font-size: 48px;
+			font-weight: bold;
+			cursor: pointer;
+		}
+		.note-area {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.5);
+			display: none;
+			justify-content: center;
+			align-items: center;
+		}
+		.note-box {
+			width: 80%;
+			height: 80%;
+			background-color: white;
+			padding: 20px;
+			box-sizing: border-box;
+			display: flex;
+			flex-direction: column;
+		}
+		textarea {
+			flex: 1;
+			font-size: 24px;
+			font-family: Arial, sans-serif;
+			border: 1px solid #ccc;
+			padding: 20px;
+		}
+		.sidebar {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 250px;
+			height: 100%;
+			background-color: #333;
+			border-right: 1px solid #ccc;
+			padding: 30px;
+			box-sizing: border-box;
+			transform: translateX(-250px); /* Initially hide the sidebar */
+			transition: transform 0.3s ease-in-out;
+                        
+		}
+		.sidebar.open {
+			transform: translateX(0); /* Show the sidebar when it's open */
+		}
+		.sidebar-button {
+			position: fixed;
+			top: 5px;
+			left: 5px;
+			width: 35px;
+			height: 35px;
+			background-color: #f0f0f0;
+			border: 1px solid #ccc;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			cursor: pointer;
+			z-index: 1;
+		}
+		.sidebar-button span {
+			width: 30px;
+			height: 4px;
+			background-color: #333;
+			margin: 5px 0;
+		}
+		.sidebar ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+		.sidebar li {
+			margin-bottom: 20px;
+		}
+		.sidebar a {
+			font-size: 24px;
+			color: #FFFFFF;
+			text-decoration: none;
+		}
+		.sidebar a:hover {
+			color: #666;
+		}
+	</style>
+</head>
+<body>
+	<div class="sidebar">
+		<h2></h2>
+		<ul>
+			<li><a href="index.html">Home</a></li>
+			<li><a href="tasks.html">Tasks</a></li>
+			<li><a href="ttgen.html">Timetable Gen</a></li>
+			<li><a href="source.html">Sources</a></li>
+			<li><a href="aiquest.html">AI Quest</a></li>
+			<li><a href="ocr.html">Img-Txt</a></li>
+			<li><a href="#">Notes</a></li>
+                          <a href="summarizer.html">summarizer</a>
+		</ul>
+	</div>
+	<div class="sidebar-button">
+		<span></span>
+		<span></span>
+		<span></span>
+	</div>
+	<div class="container">
+		<div class="subject-box">CS</div>
+		<div class="subject-box">Physics</div>
+		<div class="subject-box">English</div>
+		<div class="subject-box">Chemistry</div>
+		<div class="subject-box">Maths</div>
+		<div class="add-box">+</div>
+	</div>
+	
+	<div class="note-area">
+		<div class="note-box">
+			<textarea placeholder="Enter notes here..."></textarea>
+		</div>
+	</div>
+	
+	<script>
+		const subjectBoxes = document.querySelectorAll('.subject-box');
+		const addBox = document.querySelector('.add-box');
+		const noteArea = document.querySelector('.note-area');
+		const noteBox = document.querySelector('.note-box');
+		const sidebar = document.querySelector('.sidebar');
+		const sidebarButton = document.querySelector('.sidebar-button');
+		const links = document.querySelectorAll('.sidebar a');
+		
+		subjectBoxes.forEach(box => {
+			box.addEventListener('click', () => {
+				noteArea.style.display = 'flex';
+			});
+		});
+		
+		addBox.addEventListener('click', () => {
+			const newBox = document.createElement('div');
+			newBox.classList.add('subject-box');
+			newBox.textContent = 'New Subject';
+			newBox.addEventListener('click', () => {
+				noteArea.style.display = 'flex';
+			});
+			document.querySelector('.container').insertBefore(newBox, addBox);
+		});
+		
+		noteArea.addEventListener('click', (event) => {
+			if (event.target === noteArea) {
+				noteArea.style.display = 'none';
+			}
+		});
+		
+		sidebarButton.addEventListener('click', () => {
+			sidebar.classList.toggle('open');
+		});
+		
+		links.forEach(link => {
+			link.addEventListener('click', (event) => {
+				event.preventDefault();
+				const href = event.target.getAttribute('href');
+				if (href !== '#') {
+					window.location.href = href;
+				}
+			});
+		});
+	</script>
+</body>
+</html>

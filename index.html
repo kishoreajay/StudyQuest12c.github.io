@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyQuest</title>
+    <link rel="icon" href="studyquest-high-resolution-logo-black-transparent.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="studyquest-high-resolution-logo-black-transparent.png" sizes="16x16" type="image/png">
+   
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('ec9eb7d878c45d52bb3988b2fc8af95e.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: Arial, sans-serif;
+        }
+
+        #clock {
+            position: fixed;
+            top: 10px;
+            right: 40px;
+            font-size: 50px;
+            color: white;
+        }
+
+        #date {
+            position: fixed;
+            top: 80px;
+            right: 40px;
+            font-size: 20px;
+            color: white;
+        }
+
+        
+
+          #healthtips-container {
+    position: fixed;
+    bottom: 4%;
+    right: 3%;
+    max-width: 900px; /* Adjust width as needed */
+    height: 150px; /* Adjust height as needed */
+    overflow: hidden; /* Hide overflowing content */
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    width: 550px;
+}
+
+.health-tips {
+    animation: scroll 50s linear infinite; /* Continuous scrolling animation */
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateY(0%);
+    }
+    100% {
+        transform: translateY(-100%);
+    }
+}
+      #sidebar {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            top: 0;
+            left: -200px;
+            float: left;
+            background-color: #333;
+            padding-top: 20px;
+            transition: all 0.3s ease;
+            border-radius: 20px;
+            z-index: 3;
+        }
+
+        #sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 23px;
+            color: #FFFFFF;
+            display: block;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        #content {
+            margin-left: 0px; /* Adjusted to make space for the sidebar */
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        #sidebarToggleBtn {
+            position: absolute;
+            top: 5px; /* Adjusted to align near the timer */
+            right: 1230px; /* Adjusted to align right of the sidebar */
+            background-color: #00FFFFFF;
+            color: green;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            z-index: 4; /* Ensure the button is above other elements */
+            font-size:0;
+            transition: left 0.3s ease;
+        }
+
+
+          #motivationalQuote {
+    position: fixed;
+    top: 60%;
+    left: 3%;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    height: 20px;
+    width: 555px;
+}
+
+
+        .translucent-container {
+            position: fixed;
+            background-color: rgba(255, 255, 255, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+             }
+        
+
+           .timer-container {
+            position: fixed;
+            top: 40%;
+            left: 10%;
+            transform: translateY(-50%);
+        }
+        .timer {
+            font-size: 70px;
+            margin-bottom: 10px;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .premium-button {
+            padding: 10px 20px;
+            border: 2px solid #D8BFD8;
+            background-color: pink;
+            color: D8BFD8;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .premium-button:hover {
+            background-color: #D8BFD8;
+            color: white;
+        }
+        .tasks-container {
+            position: fixed;
+            top: 50%;
+            right: 3%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            max-height: 200px;
+            overflow-y: auto;
+            width: 280px;
+        }
+        .task-input {
+            width: 80%;
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .add-task-button {
+            width: 80%;
+            padding: 8px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+        }
+        .add-task-button:hover {
+            background-color: #45a049;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .task-checkbox {
+            margin-right: 10px;
+        }
+        .table-container {
+            position: fixed;
+            top: 84%;
+            left: 3%;
+            transform: translateY(-50%);
+            width: 555px;
+            height: 100px; /* Fixed height */
+            background-color: rgba(255, 255, 255, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            overflow-y: auto; /* Make the container scrollable */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 3px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .add-row-button {
+            margin-top: 10px;
+            padding: 8px 16px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .add-row-button:hover {
+            background-color: #45a049;
+        }
+        h1 {
+            color: white; /* Make the text white */
+            display: flex;
+            align-items: center; /* Align text and symbol vertically */
+        }
+        h1 img {
+            width: 160px; /* Adjust width as needed */
+            height: 100px; /* Adjust height as needed */
+            margin-left: 10px; /* Add margin to separate the text and symbol */
+        }
+
+         
+    </style>
+</head>
+<body>
+
+         <div id="clock"></div>
+    <div id="date"></div>
+    <div id="weather"></div>
+    <div id="calendar"></div>
+
+        <div id="healthtips-container" class="translucent-container">
+    <!-- Health tips will be added dynamically here -->
+    <p class="health-tips"><strong></strong></p>
+    <ul id="healthTipsList" class="health-tips">
+        <!-- Health tips will be dynamically added here -->
+    </ul>
+</div>
+
+       <div id="sidebar">
+        <a href="index.html">Home</a>
+        <a href="tasks.html">Tasks</a>
+        <a href="ttgen.html">Timetable Gen</a> <!-- Added timetable generator link -->
+        <a href="source.html">Source</a>
+        <a href="aiquest.html">AI Quest</a>
+        <a href="ocr.html">Img-Text</a>
+         <a href="notes.html">Notes</a>
+          <a href="summarizer.html">summarizer</a>
+    </div>
+
+      <button id="sidebarToggleBtn" onclick="toggleSidebar()">=</button>
+    </div>
+
+
+<div id="content">
+    <h1>STUDYQUEST<img src="studyquest-high-resolution-logo-black-transparent.png" alt="Icon"></h1> <!-- Added the icon near the title -->
+</div>
+
+<div class="timer-container translucent-container">
+    <div class="timer">00:00:00</div>
+    <div class="button-container">
+        <button class="premium-button" onclick="startTimer()">Start</button>
+        <button class="premium-button" onclick="stopTimer()">Stop</button>
+        <button class="premium-button" onclick="resetTimer()">Reset</button>
+    </div>
+</div>
+
+<div class="tasks-container translucent-container">
+    <input type="text" class="task-input" id="taskInput" placeholder="Enter task">
+    <button class="add-task-button" onclick="addTask()">Add Task</button>
+</div>
+
+<div class="table-container translucent-container">
+    <table>
+        <thead>
+            <tr>
+                <th>DATE</th>
+                <th>TASK</th>
+                <th>TIME</th>
+            </tr>
+        </thead>
+        <tbody id="taskTableBody">
+            <!-- Rows will be added dynamically here -->
+        </tbody>
+    </table>
+    <button class="add-row-button" onclick="addRow()">Add Row</button>
+</div>
+
+<div id="motivationalQuote" class="translucent-container" style="position: fixed; bottom: 10%;"></div> <!-- Container for motivational quote -->
+
+<script>
+    let timer;
+    let seconds = 0;
+    let minutes = 0;
+    let hours = 0;
+
+    // Motivational quotes
+    const quotes = [
+        
+        "Success is not final, failure is not fatal: It is the courage to continue that counts. - Winston Churchill",
+        "The only way to do great work is to love what you do. - Steve Jobs",
+        "Believe you can and you're halfway there. - Theodore Roosevelt",
+        "It does not matter how slowly you go as long as you do not stop. - Confucius",
+        "The future belongs to those who believe in the beauty of their dreams. - Eleanor Roosevelt",
+        "The harder you work for something, the greater you’ll feel when you achieve it. - Unknown",
+        "Don’t stop when you’re tired. Stop when you’re done. - Unknown",
+        "Wake up with determination. Go to bed with satisfaction. - Unknown",
+        "Do something today that your future self will thank you for. - Unknown",
+        "It’s going to be hard, but hard does not mean impossible. - Unknown",
+        "The key to success is to focus on goals, not obstacles. - Unknown",
+        "Dream it. Believe it. Build it. - Unknown",
+        "Remember why you started. - Unknown",
+         "Everything happens for a reason. - Unknown",
+        "The only way to do great work is to love what you do. - Steve Jobs",
+        "Your limitation—it’s only your imagination. - Unknown",
+        "Push yourself, because no one else is going to do it for you. - Unknown",
+        "Great things never come from comfort zones. - Unknown",
+        "Dream bigger. Do bigger. - Unknown",
+        "Don’t wait for opportunity. Create it. - Unknown",
+        "Sometimes we’re tested not to show our weaknesses, but to discover our strengths. - Unknown",
+        "The key to success is to focus on goals, not obstacles. - Unknown",
+        "Dream it. Believe it. Build it. - Unknown",
+        "Remember why you started. - Unknown",
+        "The only way to do great work is to love what you do. - Steve Jobs",
+        "Your limitation—it’s only your imagination. - Unknown",
+        "Push yourself, because no one else is going to do it for you. - Unknown",
+        "Great things never come from comfort zones. - Unknown",
+        "Dream bigger. Do bigger. - Unknown",
+        "Don’t wait for opportunity. Create it. - Unknown",
+        "Sometimes we’re tested not to show our weaknesses, but to discover our strengths. - Unknown",
+        "The key to success is to focus on goals, not obstacles. - Unknown",
+        "Dream it. Believe it. Build it. - Unknown",
+        "Remember why you started. - Unknown",
+        "The only way to do great work is to love what you do. - Steve Jobs",
+        "Your limitation—it’s only your imagination. - Unknown",
+        "Push yourself, because no one else is going to do it for you. - Unknown",
+        "Great things never come from comfort zones. - Unknown",
+        "Dream bigger. Do bigger. - Unknown",
+        "Don’t wait for opportunity. Create it. - Unknown",
+        "Sometimes we’re tested not to show our weaknesses, but to discover our strengths. - Unknown",
+        "The key to success is to focus on goals, not obstacles. - Unknown",
+        "Dream it. Believe it. Build it. - Unknown",
+        "Remember why you started. - Unknown",
+        "The only way to do great work is to love what you do. - Steve Jobs"
+    ];
+
+    function startTimer() {
+        timer = setInterval(updateTimer, 1000);
+    }
+
+    function stopTimer() {
+        clearInterval(timer);
+    }
+
+    function resetTimer() {
+        clearInterval(timer);
+        seconds = -1;
+        minutes = 0;
+        hours = 0;
+        updateTimer();
+    }
+
+    function updateTimer() {
+        seconds++;
+        if (seconds === 60) {
+            seconds = 0;
+            minutes++;
+        }
+        if (minutes === 60) {
+            minutes = 0;
+            hours++;
+        }
+        const formattedTime = formatTime(hours) + ":" + formatTime(minutes) + ":" + formatTime(seconds);
+        document.querySelector(".timer").textContent = formattedTime;
+    }
+
+    function formatTime(time) {
+        return time < 10 ? "0" + time : time;
+    }
+
+    function addTask() {
+        const taskInput = document.getElementById("taskInput");
+        const taskText = taskInput.value.trim();
+        if (taskText !== "") {
+            const tasksContainer = document.createElement("div");
+            tasksContainer.classList.add("task-item");
+            const taskCheckbox = document.createElement("input");
+            taskCheckbox.type = "checkbox";
+            taskCheckbox.classList.add("task-checkbox");
+            taskCheckbox.addEventListener("change", function () {
+                if (this.checked) {
+                    alert("Task completed: " + taskText);
+                    tasksContainer.remove();
+                }
+            });
+            const taskTextElement = document.createElement("span");
+            taskTextElement.textContent = taskText;
+            tasksContainer.appendChild(taskCheckbox);
+            tasksContainer.appendChild(taskTextElement);
+            document.querySelector(".tasks-container").appendChild(tasksContainer);
+            taskInput.value = "";
+        }
+    }
+
+    function addRow() {
+        const tableBody = document.getElementById("taskTableBody");
+        const newRow = document.createElement("tr");
+        for (let i = 0; i < 3; i++) {
+            const newCell = document.createElement("td");
+            const newInput = document.createElement("input");
+            newInput.type = "text";
+            newInput.classList.add("table-input");
+            newCell.appendChild(newInput);
+            newRow.appendChild(newCell);
+        }
+        tableBody.appendChild(newRow);
+    }
+
+    // Function to display motivational quote
+    function displayMotivationalQuote() {
+        const quoteContainer = document.getElementById("motivationalQuote");
+        let index = 0; // Index for selecting quotes
+        quoteContainer.textContent = quotes[index];
+        setInterval(() => {
+            index = (index + 1) % quotes.length; // Loop through quotes array
+            quoteContainer.textContent = quotes[index]; // Update quote
+        }, 5000); // Change quote every 5 seconds
+    }
+
+    // Display initial motivational quote and start updating
+    displayMotivationalQuote();
+
+    function displayNotification() {
+        const notification = document.createElement('div');
+        notification.textContent = 'Drink water! Stay Hydrated';
+        notification.style.position = 'fixed';
+        notification.style.top = '10px';
+        notification.style.right = '550px';
+        notification.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+        notification.style.color = 'white';
+        notification.style.padding = '15px';
+        notification.style.borderRadius = '5px';
+        document.body.appendChild(notification);
+
+        setInterval(() => {
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            },5000);
+        },30 * 60 * 1000);
+    }
+
+    // Display initial notification
+    displayNotification();
+
+
+      // Health tips array
+const healthTips = [
+    "Stay Hydrated: Drink plenty of water.",
+    "Take Breaks: Schedule regular breaks.",
+    "Eat Nutritious Foods: Fuel your body and mind.",
+    "Exercise Regularly: Incorporate physical activity into your routine.",
+    "Get Adequate Sleep: Prioritize rest and rejuvenation.",
+    "Practice Good Posture: Maintain proper posture while studying.",
+    "Manage Stress: Employ stress-reduction techniques.",
+    "Limit Screen Time: Minimize prolonged exposure to screens.",
+    "Stay Organized: Keep your study space tidy and organized.",
+    "Seek Support: Reach out for help when needed."
+    ];
+
+// Function to add health tips dynamically
+function addHealthTips() {
+    const healthTipsList = document.getElementById('healthTipsList');
+    healthTips.forEach(tip => {
+        const listItem = document.createElement('li');
+        listItem.textContent = tip;
+        healthTipsList.appendChild(listItem);
+    });
+}
+
+// Add health tips when the page loads
+window.addEventListener('load', addHealthTips);
+
+  function toggleSidebar() {
+            var sidebar = document.getElementById("sidebar");
+            var content = document.getElementById("content");
+            if (sidebar.style.left === "0px") {
+                // Close the sidebar
+                sidebar.style.left = "-200px";
+                content.style.marginLeft = "0";
+            } else {
+                // Open the sidebar
+                sidebar.style.left = "0px";
+                content.style.marginLeft = "200px";
+            }
+        }
+
+      function updateTime() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        function updateDate() {
+            const now = new Date();
+            const date = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('date').textContent = date;
+        }
+
+        function updateWeather() {
+            // Fetch weather information from an API and update the #weather element
+            // Example:
+            // document.getElementById('weather').textContent = 'Weather: Sunny';
+        }
+
+        function updateCalendar() {
+            // Fetch calendar information or integrate a calendar library/plugin
+            // Example:
+            // document.getElementById('calendar').textContent = 'Calendar: Upcoming events...';
+        }
+
+        // Update time, date, weather, and calendar every second
+        setInterval(updateTime, 1000);
+        setInterval(updateDate, 60000); // Update date every minute
+        setInterval(updateWeather, 600000); // Update weather every 10 minutes
+        setInterval(updateCalendar, 600000); // Update calendar every 10 minutes
+
+        // Initial update
+        updateTime();
+        updateDate();
+
+         function displayNotification() {
+    const notification = document.createElement('div');
+    notification.textContent = 'Drink water! Stay Hydrated';
+    notification.style.position = 'fixed';
+    notification.style.top = '10px';
+    notification.style.right = '550px';
+    notification.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+    notification.style.color = 'white';
+    notification.style.padding = '15px';
+    notification.style.borderRadius = '5px';
+
+    // Delay the initial appearance of the notification by 30 minutes (30 * 60 * 1000 milliseconds)
+    setTimeout(() => {
+        document.body.appendChild(notification);
+
+        setInterval(() => {
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            },5000);
+        },30 * 60 * 1000);
+    }, 30 * 60 * 1000); // This sets the initial delay and the repeat interval
+}
+
+// Display initial notification after a delay
+displayNotification();
+    
+ 
+
+</script>
+
+</body>
+</html>
